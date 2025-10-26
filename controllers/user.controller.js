@@ -1,6 +1,7 @@
-const bcrypt = require('bcrypt')
-const User = require("../models/user.schema")
-const jwt = require('jsonwebtoken')
+const bcrypt = require("bcrypt");
+const User = require("../models/user.schema");
+const jwt = require("jsonwebtoken");
+const Class = require("../models/class.schema");
 
 exports.registerUser = async (req, res) => {
   try {
@@ -74,7 +75,7 @@ exports.loginUser = async (req, res) => {
       const token = jwt.sign(
         {
           _id: existingUser._id,
-          usernname: existingUser.username,
+          fullname: existingUser.fullname,
           email: existingUser.email,
           role: existingUser.role,
         },
@@ -91,7 +92,7 @@ exports.loginUser = async (req, res) => {
           email: existingUser.email,
           role: existingUser.role,
         },
-        token
+        token,
       });
     });
   } catch (error) {
@@ -99,6 +100,38 @@ exports.loginUser = async (req, res) => {
     return res.json({
       success: false,
       message: "Error while logggin in the user",
+    });
+  }
+};
+
+exports.markAttendance = async (req, res) => {
+  try {
+    const { classID, studentID } = req.body;
+    const currClass = await Class.findByIdAndUpdate(classID, {
+      total_students: total_students.append(studentID),
+    });
+    return res.json({ message: "Attendance Marked", success: true });
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      message: "Error while marking attendance",
+      success: false,
+    });
+  }
+};
+
+exports.getUser = async (req, res) => {
+  try {
+    const user = req.user;
+    return res.json({
+      data: user,
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      message: "Error while getting the user",
+      success: false,
     });
   }
 };

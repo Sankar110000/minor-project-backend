@@ -6,15 +6,21 @@ const classSchema = new mongoose.Schema({
         required: true
     },
     classTeacher: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
         reuired: true
     },
+    total_students:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }],
     startTime: {
         type: Date,
         default: new Date(Date.now())
     },
     endTime: {
         type: Date,
+        default: new Date(Date.now()*3600),
         required: true
     }
 })
