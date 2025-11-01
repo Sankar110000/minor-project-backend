@@ -1,7 +1,11 @@
-const { createNewClass } = require('../controllers/class.controller')
+const {
+  createNewClass,
+  getCurrentClass,
+} = require("../controllers/class.controller");
 
-const classRouter = require('express').Router()
+const classRouter = require("express").Router();
 
-classRouter.post('/create', createNewClass)
+classRouter.post("/create", createNewClass);
+classRouter.post("/getCurrClass", getCurrentClass);
 
-module.exports = classRouter
+module.exports = classRouter;

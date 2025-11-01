@@ -18,12 +18,11 @@ const classSchema = new mongoose.Schema({
   ],
   startTime: {
     type: Date,
-    default: new Date(Date.now()),
+    default: Date.now(),
   },
-  endTime: {
+  expiresAt: {
     type: Date,
-    default: new Date(Date.now() + 36000),
-    required: true,
+    expires: 1,
   },
 });
 

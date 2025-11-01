@@ -88,7 +88,7 @@ exports.loginUser = async (req, res) => {
         message: "Login successful",
         user: {
           _id: existingUser._id,
-          fullname: existingUser.username,
+          fullname: existingUser.fullname,
           email: existingUser.email,
           role: existingUser.role,
         },
@@ -107,10 +107,24 @@ exports.loginUser = async (req, res) => {
 exports.markAttendance = async (req, res) => {
   try {
     const { classID, studentID } = req.body;
-    const currClass = await Class.findByIdAndUpdate(classID, {
-      total_students: total_students.append(studentID),
+    const attendedStudent = await Class.find({
+      total_students: { $in: [studentID] },
     });
-    return res.json({ message: "Attendance Marked", success: true });
+    console.log(attendedStudent);
+    if (attendedStudent.length > 0) {
+      return res.json({
+        success: false,
+        message: "You are already present",
+      });
+    }
+    const currClass = await Class.findByIdAndUpdate(
+      classID,
+      {
+        $push: { total_students: studentID },
+      },
+      { new: true }
+    );
+    return res.json({ message: "Attendance Marked", currClass, success: true });
   } catch (error) {
     console.log(error);
     return res.json({
@@ -123,6 +137,7 @@ exports.markAttendance = async (req, res) => {
 exports.getUser = async (req, res) => {
   try {
     const user = req.user;
+    console.log(user);
     return res.json({
       data: user,
       success: true,
