@@ -8,7 +8,7 @@ const classSchema = new mongoose.Schema({
   classTeacher: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    reuired: true,
+    required: true,
   },
   total_students: [
     {
@@ -20,9 +20,8 @@ const classSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
-  expiresAt: {
+  endTime: {
     type: Date,
-    expires: 1,
   },
 });
 
