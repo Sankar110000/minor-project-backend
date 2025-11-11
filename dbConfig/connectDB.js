@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const DB_URL = process.env.DB_URL;
 const DB_NAME = "attendance_system";
-const LOCAL_DB = "mongodb://localhost:27017";
+const LOCAL_DB = "mongodb://localhost:27017/";
 
 async function DBconnect() {
   try {

@@ -3,6 +3,7 @@ const Class = require("../models/class.schema");
 exports.createNewClass = async (req, res) => {
   try {
     const { title, classTeacher, endTime } = req.body;
+    console.log(title, classTeacher, endTime);
     const onGoingClass = await Class.findOne({
       title,
       startTime: { $lte: new Date(Date.now()) },
@@ -46,7 +47,9 @@ exports.getCurrentClass = async (req, res) => {
       classTeacher: teacherID,
       startTime: { $lte: new Date(Date.now()) },
       endTime: { $gt: new Date(Date.now()) },
-    });
+    })
+      .populate("classTeacher")
+      .populate("total_students");
     if (currClass) {
       return res.json({
         message: "A class is going on",
@@ -114,6 +117,31 @@ exports.getAllClasses = async (req, res) => {
     console.log(error);
     return res.json({
       message: "Error while getting all classes",
+      success: false,
+    });
+  }
+};
+
+exports.endClass = async (req, res) => {
+  try {
+    const { classID } = req.body;
+    const updatedClass = await Class.findByIdAndUpdate(classID, {
+      endTime: Date.now(),
+    });
+    if (!updatedClass) {
+      return res.json({
+        message: "Eror while updating the document",
+        success: false,
+      });
+    }
+    return res.json({
+      message: "Class ended successfully",
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      message: "Error while ending the class",
       success: false,
     });
   }

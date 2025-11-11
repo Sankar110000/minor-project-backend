@@ -47,6 +47,7 @@ exports.registerUser = async (req, res) => {
 };
 
 exports.loginUser = async (req, res) => {
+  console.log("trigreed");
   try {
     const { email, password } = req.body;
     const existingUser = await User.findOne({ email });
