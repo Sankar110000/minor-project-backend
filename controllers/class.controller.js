@@ -94,7 +94,7 @@ exports.getPrevoiusClass = async (req, res) => {
     const { teacherID } = req.body;
     const classes = await Class.find({
       classTeacher: teacherID,
-    });
+    }).populate("classTeacher");
     return res.json({
       classes,
       success: true,
