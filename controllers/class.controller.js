@@ -1,4 +1,5 @@
 const Class = require("../models/class.schema");
+const User = require("../models/user.schema");
 
 exports.createNewClass = async (req, res) => {
   try {
@@ -142,6 +143,36 @@ exports.endClass = async (req, res) => {
     console.log(error);
     return res.json({
       message: "Error while ending the class",
+      success: false,
+    });
+  }
+};
+
+exports.getAttendance = async (req, res) => {
+  try {
+    const { classID } = req.body;
+    const currClass = await Class.findOne({ _id: classID }).populate(
+      "total_students"
+    );
+    const students = await User.find({ role: "student" });
+
+    currClass.total_students.forEach((usr) => {
+      let id = usr._id;
+      students.forEach((stdnt) => {
+        if (stdnt._id === id) {
+          return { ...stdnt, isPresent: true };
+        }
+      });
+    });
+
+    return res.json({
+      message: "Got successfully",
+      students: currClass.total_students,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      message: "Error while getting the attendance",
       success: false,
     });
   }

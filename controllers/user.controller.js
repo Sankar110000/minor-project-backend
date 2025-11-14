@@ -151,3 +151,19 @@ exports.getUser = async (req, res) => {
     });
   }
 };
+
+exports.getAllUser = async (req, res) => {
+  try {
+    const users = await User.find();
+    return res.json({
+      users,
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      message: "Error while getting all users",
+      success: false,
+    });
+  }
+};
