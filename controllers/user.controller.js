@@ -108,16 +108,6 @@ exports.loginUser = async (req, res) => {
 exports.markAttendance = async (req, res) => {
   try {
     const { classID, studentID } = req.body;
-    const attendedStudent = await Class.find({
-      total_students: { $in: [studentID] },
-    });
-    console.log(attendedStudent);
-    if (attendedStudent.length > 0) {
-      return res.json({
-        success: false,
-        message: "You are already present",
-      });
-    }
     const currClass = await Class.findByIdAndUpdate(
       classID,
       {
