@@ -81,7 +81,7 @@ exports.loginUser = async (req, res) => {
           role: existingUser.role,
         },
         process.env.TOKEN_SECRET,
-        { expiresIn: "1d" }
+        { expiresIn: "1d" },
       );
 
       return res.json({
@@ -108,13 +108,15 @@ exports.loginUser = async (req, res) => {
 exports.markAttendance = async (req, res) => {
   try {
     const { classID, studentID } = req.body;
+    console.log(classID, studentID);
     const currClass = await Class.findByIdAndUpdate(
       classID,
       {
         $push: { total_students: studentID },
       },
-      { new: true }
+      { new: true },
     );
+    console.log(currClass);
     return res.json({ message: "Attendance Marked", currClass, success: true });
   } catch (error) {
     console.log(error);

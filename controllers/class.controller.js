@@ -30,7 +30,13 @@ exports.createNewClass = async (req, res) => {
     return res.json({
       success: true,
       message: "New class created",
-      savedClass,
+      savedClass: {
+        _id: savedClass._id,
+        title: savedClass.title,
+        classTeacher: savedClass.classTeacher,
+        startTime: savedClass.startTime,
+        endTime: savedClass.endTime,
+      },
     });
   } catch (error) {
     console.log(error);
@@ -54,7 +60,14 @@ exports.getCurrentClass = async (req, res) => {
     if (currClass) {
       return res.json({
         message: "A class is going on",
-        currClass,
+        currClass: {
+          _id: currClass._id,
+          title: currClass.title,
+          classTeacher: currClass.classTeacher,
+          total_students: currClass.total_students,
+          startTime: currClass.startTime,
+          endTime: currClass.endTime,
+        },
         success: true,
       });
     }
@@ -152,7 +165,7 @@ exports.getAttendance = async (req, res) => {
   try {
     const { classID } = req.body;
     const currClass = await Class.findOne({ _id: classID }).populate(
-      "total_students"
+      "total_students",
     );
     const students = await User.find({ role: "student" });
 
@@ -173,6 +186,33 @@ exports.getAttendance = async (req, res) => {
     console.log(error);
     return res.json({
       message: "Error while getting the attendance",
+      success: false,
+    });
+  }
+};
+
+exports.getClassById = async (req, res) => {
+  try {
+    const { classId } = req.query;
+    const fetchedClass = await Class.findById(classId)
+      .populate("classTeacher")
+      .populate("total_students");
+    if (!fetchedClass) {
+      return res.json({
+        message: "Error while getting class from database",
+        success: false,
+      });
+    }
+
+    return res.json({
+      class: fetchedClass,
+      message: "Error while getting class through id",
+      success: true,
+    });
+  } catch (error) {
+    console.log("Error while getting class through id", error);
+    return res.json({
+      message: "Error while getting class through id",
       success: false,
     });
   }
