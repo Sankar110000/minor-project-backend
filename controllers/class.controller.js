@@ -34,7 +34,7 @@ exports.createNewClass = async (req, res) => {
         _id: savedClass._id,
         title: savedClass.title,
         classTeacher: savedClass.classTeacher,
-        startTime: savedClass.startTime,
+        startTime: new Date(),
         endTime: savedClass.endTime,
       },
     });
